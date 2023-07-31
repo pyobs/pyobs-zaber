@@ -1,0 +1,6 @@
+
+class: pyobs.modules.robotic.ScriptRunner
+script:
+  class: pyobs.robotic.scripts.SelectorScript.SelectorScript
+  selector: LinearModeSelector
+  mode: spectroscopy

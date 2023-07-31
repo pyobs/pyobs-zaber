@@ -1,0 +1,8 @@
+
+class: pyobs.modules.motor.zaber_xNMS23.ZaberMotor
+basis: 0
+port:  "/dev/ttyUSB0"
+
+comm:
+  class: pyobs.comm.dbus.DbusComm
+  name: zaber_xNMS23
