@@ -9,8 +9,6 @@ from typing import Any, List, Optional
 from pyobs.modules import Module
 
 
-
-
 class ZaberMotor(Module):
     """Class for the Selection of Modus (Spectroscopy or Photometry)."""
 
@@ -41,10 +39,7 @@ class ZaberMotor(Module):
         self.length_unit = length_unit
         self.speed_unit = speed_unit
 
-    async def move_by(self, length,
-                            speed=None,
-                            length_unit=None,
-                            speed_unit=None) -> None:
+    async def move_by(self, length, speed=None, length_unit=None, speed_unit=None) -> None:
         """
         Move Zaber motor by a given value.
         Args:
@@ -63,7 +58,9 @@ class ZaberMotor(Module):
         # move
         with Connection.open_serial_port(self.port) as connection:
             connection.enable_alerts()
-            device = connection.detect_devices()[0] # TODO: raise xxx if len(device_list) is not 1 (0 -> no device found, >1 -> try to find correct one)
+            device = connection.detect_devices()[
+                0
+            ]  # TODO: raise xxx if len(device_list) is not 1 (0 -> no device found, >1 -> try to find correct one)
             axis = device.get_axis(1)
             axis.move_relative(length, length_unit, velocity=speed, velocity_unit=speed_unit)
 
@@ -81,10 +78,7 @@ class ZaberMotor(Module):
             axis = device.get_axis(1)
             return axis.get_position(unit=position_unit)
 
-    async def move_to(self, position,
-                            speed=None,
-                            length_unit=None,
-                            speed_unit=None) -> None:
+    async def move_to(self, position, speed=None, length_unit=None, speed_unit=None) -> None:
         """
         Move Zaber motor to a given position.
         Args:
@@ -109,4 +103,3 @@ class ZaberMotor(Module):
         Motor moves back to basis.
         """
         await self.move_to(self.basis)
-

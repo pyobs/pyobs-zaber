@@ -4,3 +4,7 @@ script:
   class: pyobs.robotic.scripts.SelectorScript.SelectorScript
   selector: LinearModeSelector
   mode: spectroscopy
+
+comm:
+  class: pyobs.comm.dbus.DbusComm
+  name: SelectMode
