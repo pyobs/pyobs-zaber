@@ -14,7 +14,7 @@ from zaber_motion.ascii import Connection
 class ZaberModeSelector(Module, IMode, IMotion):
     """Class for the Selection of Modus with a linear Motor (e.g. Spectroscopy or Photometry)."""
 
-    __module__ = "pyobs.modules.LinearModeSelector"
+    __module__ = "pyobs_zaber.ZaberModeSelector"
 
     def __init__(
         self,
@@ -25,7 +25,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         speed_unit=Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND,
         **kwargs: Any,
     ):
-        """Creates a new LinearModeSelector.
+        """Creates a new ZaberModeSelector.
         Args:
             modes: dictionary of available modes in the form {name: position}
             motor: name of the motor used to set the modes
