@@ -106,7 +106,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         await self.move_to(self.modes[mode])
         logging.info("Mode %s ready.", mode)
 
-    @abstractmethod
     async def get_mode(self) -> str:
         """Get currently set mode.
 
@@ -120,7 +119,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         logging.warning("None of the available modes selected. Available modes are: %s", self.list_modes())
         return "undefined"
 
-    @abstractmethod
     async def init(self, **kwargs: Any) -> None:
         """Initialize device.
 
@@ -129,7 +127,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         logging.error("Not implemented")
 
-    @abstractmethod
     async def park(self, **kwargs: Any) -> None:
         """Park device.
 
@@ -138,7 +135,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         logging.error("Not implemented")
 
-    @abstractmethod
     async def get_motion_status(self, device: Optional[str] = None, **kwargs: Any) -> MotionStatus:
         """Returns current motion status.
 
@@ -151,7 +147,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         logging.error("Not implemented")
         return MotionStatus.ERROR
 
-    @abstractmethod
     async def stop_motion(self, device: Optional[str] = None, **kwargs: Any) -> None:
         """Stop the motion.
 
@@ -160,7 +155,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         logging.error("Not implemented")
 
-    @abstractmethod
     async def is_ready(self, **kwargs: Any) -> bool:
         """Returns the device is "ready", whatever that means for the specific device.
 
