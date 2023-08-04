@@ -1,5 +1,5 @@
 
-class: pyobs-zaber/pyobs-zaber/ZaberModeSelector.py:14
+class: pyobs_zaber/pyobs_zaber/ZaberModeSelector.py:14
 modes:
   photometry: 0
   spectroscopy: 100
@@ -12,7 +12,6 @@ motor:
 comm:
   class: pyobs.comm.dbus.DbusComm
   name: LinearModeSelector
-
 
 
 

@@ -1,5 +1,5 @@
 
-class: pyobs.modules.motor.zaber_xNMS23.ZaberMotor
+class: pyobs_zaber/pyobs_zaber/zaber_xNMS23.py:14
 basis: 0
 port:  "/dev/ttyUSB0"
 
