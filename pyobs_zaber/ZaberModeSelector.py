@@ -90,7 +90,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         return list(self.modes.keys())
 
     @abstractmethod
-    async def set_mode(self, mode: str) -> None:
+    async def set_mode(self, mode: str, **kwargs) -> None:
         """Set the current mode.
 
         Args:
@@ -113,7 +113,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         Returns:
             Name of currently set mode.
         """
-        pos_current = self.motor.check_position()
+        pos_current = self.check_position()
         for mode, mode_pos in self.modes.items():
             if pos_current == mode_pos:
                 return mode
@@ -136,7 +136,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         Raises:
             ParkError: If device could not be parked.
         """
-        self.motor.to_basis()
+        logging.error("Not implemented")
 
     @abstractmethod
     async def get_motion_status(self, device: Optional[str] = None, **kwargs: Any) -> MotionStatus:
@@ -168,3 +168,4 @@ class ZaberModeSelector(Module, IMode, IMotion):
             Whether device is ready
         """
         logging.error("Not implemented")
+        return True
