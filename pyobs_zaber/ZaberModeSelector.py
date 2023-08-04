@@ -80,7 +80,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         step = position - self.check_position()
         await self.move_by(step)
 
-    @abstractmethod
     async def list_modes(self) -> List[str]:
         """List available modes.
 
@@ -89,7 +88,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         return list(self.modes.keys())
 
-    @abstractmethod
     async def set_mode(self, mode: str, **kwargs) -> None:
         """Set the current mode.
 
