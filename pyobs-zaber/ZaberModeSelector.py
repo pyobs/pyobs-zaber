@@ -159,3 +159,12 @@ class ZaberModeSelector(Module, IMode, IMotion):
             device: Name of device to stop, or None for all.
         """
         logging.error("Not implemented")
+
+    @abstractmethod
+    async def is_ready(self, **kwargs: Any) -> bool:
+        """Returns the device is "ready", whatever that means for the specific device.
+
+        Returns:
+            Whether device is ready
+        """
+        logging.error("Not implemented")
