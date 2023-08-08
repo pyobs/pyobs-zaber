@@ -77,7 +77,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
             position: value to which the motor moves
         """
         # move
-        step = position - self.check_position()
+        step = position - await self.check_position()
         await self.move_by(step)
 
     async def list_modes(self) -> List[str]:
@@ -98,7 +98,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
             ValueError: If an invalid mode was given.
             MoveError: If mode selector cannot be moved.
         """
-        if self.get_mode() == mode:
+        if await self.get_mode() == mode:
             logging.info("Mode %s already selected.", mode)
         logging.info("Moving mode selector ...")
         await self.move_to(self.modes[mode])
@@ -110,7 +110,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         Returns:
             Name of currently set mode.
         """
-        pos_current = self.check_position()
+        pos_current = await self.check_position()
         for mode, mode_pos in self.modes.items():
             if pos_current == mode_pos:
                 return mode
