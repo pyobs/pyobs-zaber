@@ -51,7 +51,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
         Args:
             length: value by which the motor moves
         """
-
         # move
         with Connection.open_serial_port(self.port) as connection:
             connection.enable_alerts()
@@ -70,15 +69,29 @@ class ZaberModeSelector(Module, IMode, IMotion):
             axis = device.get_axis(1)
             return axis.get_position(unit=self.length_unit)
 
+    # async def move_to(self, position) -> None:
+    #     """
+    #     Move Zaber motor to a given position.
+    #     Args:
+    #         position: value to which the motor moves
+    #     """
+    #     # move
+    #     step = position - await self.check_position()
+    #     await self.move_by(step)
+
     async def move_to(self, position) -> None:
         """
         Move Zaber motor to a given position.
         Args:
             position: value to which the motor moves
         """
-        # move
-        step = position - await self.check_position()
-        await self.move_by(step)
+        with Connection.open_serial_port(self.port) as connection:
+            connection.enable_alerts()
+            device = connection.detect_devices()[0]
+            axis = device.get_axis(1)
+            await axis.move_absolute_async(
+                position, self.length_unit, velocity=self.speed, velocity_unit=self.speed_unit
+            )
 
     async def list_modes(self) -> List[str]:
         """List available modes.
@@ -113,10 +126,9 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         pos_current = await self.check_position()
         for mode, mode_pos in self.modes.items():
-            print(pos_current, mode_pos)
             if pos_current == mode_pos:
                 return mode
-        available_modes = self.list_modes()
+        available_modes = await self.list_modes()
         logging.warning("None of the available modes selected. Available modes are: %s", available_modes)
         return "undefined"
 
