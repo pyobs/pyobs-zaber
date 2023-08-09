@@ -100,9 +100,10 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         if await self.get_mode() == mode:
             logging.info("Mode %s already selected.", mode)
-        logging.info("Moving mode selector ...")
-        await self.move_to(self.modes[mode])
-        logging.info("Mode %s ready.", mode)
+        else:
+            logging.info("Moving mode selector ...")
+            await self.move_to(self.modes[mode])
+            logging.info("Mode %s ready.", mode)
 
     async def get_mode(self) -> str:
         """Get currently set mode.
