@@ -112,9 +112,11 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         pos_current = await self.check_position()
         for mode, mode_pos in self.modes.items():
+            print(pos_current, mode_pos)
             if pos_current == mode_pos:
                 return mode
-        logging.warning("None of the available modes selected. Available modes are: %s", self.list_modes())
+        available_modes = self.list_modes()
+        logging.warning("None of the available modes selected. Available modes are: %s", available_modes)
         return "undefined"
 
     async def init(self, **kwargs: Any) -> None:
