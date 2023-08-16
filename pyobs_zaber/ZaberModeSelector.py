@@ -69,16 +69,6 @@ class ZaberModeSelector(Module, IMode, IMotion):
             axis = device.get_axis(1)
             return axis.get_position(unit=self.length_unit)
 
-    # async def move_to(self, position) -> None:
-    #     """
-    #     Move Zaber motor to a given position.
-    #     Args:
-    #         position: value to which the motor moves
-    #     """
-    #     # move
-    #     step = position - await self.check_position()
-    #     await self.move_by(step)
-
     async def move_to(self, position) -> None:
         """
         Move Zaber motor to a given position.
@@ -176,3 +166,14 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         logging.error("Not implemented")
         return True
+
+    async def enable_led(self, status: bool) -> None:
+        """
+        Turn on the motor's status LED.
+        Args:
+            status: True -> LED on, False -> LED off
+        """
+        with Connection.open_serial_port(self.port) as connection:
+            connection.enable_alerts()
+            device = connection.detect_devices()[0]
+            device.settings.set("system.led.enable", float(status))
