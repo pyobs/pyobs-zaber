@@ -101,12 +101,16 @@ class ZaberModeSelector(Module, IMode, IMotion):
             ValueError: If an invalid mode was given.
             MoveError: If mode selector cannot be moved.
         """
-        if await self.get_mode() == mode:
-            logging.info("Mode %s already selected.", mode)
+        available_modes = self.list_modes()
+        if mode in available_modes:
+            if await self.get_mode() == mode:
+                logging.info("Mode %s already selected.", mode)
+            else:
+                logging.info("Moving mode selector ...")
+                await self.move_to(self.modes[mode])
+                logging.info("Mode %s ready.", mode)
         else:
-            logging.info("Moving mode selector ...")
-            await self.move_to(self.modes[mode])
-            logging.info("Mode %s ready.", mode)
+            logging.warning("Unknown mode %s. Available modes are: %s", mode, available_modes)
 
     async def get_mode(self) -> str:
         """Get currently set mode.
