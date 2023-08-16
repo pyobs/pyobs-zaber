@@ -23,6 +23,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         speed: float = 0,
         length_unit=Units.ANGLE_DEGREES,
         speed_unit=Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND,
+        system_led: bool = False,
         **kwargs: Any,
     ):
         """Creates a new ZaberModeSelector.
@@ -44,6 +45,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         self.speed = speed
         self.length_unit = length_unit
         self.speed_unit = speed_unit
+        self.enable_led(system_led)
 
     async def move_by(self, length) -> None:
         """
