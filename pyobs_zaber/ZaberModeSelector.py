@@ -45,7 +45,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         self.speed = speed
         self.length_unit = length_unit
         self.speed_unit = speed_unit
-        self.enable_led(system_led)
+        await self.enable_led(system_led)
 
     async def move_by(self, length) -> None:
         """
