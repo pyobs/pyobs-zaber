@@ -45,7 +45,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         self.speed = speed
         self.length_unit = length_unit
         self.speed_unit = speed_unit
-        await self.enable_led(system_led)
+        self.enable_led(system_led)
 
     async def move_by(self, length) -> None:
         """
@@ -122,7 +122,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         pos_current = await self.check_position()
         for mode, mode_pos in self.modes.items():
-            if pos_current == mode_pos:
+            if round(pos_current) == mode_pos:
                 return mode
         available_modes = await self.list_modes()
         logging.warning("None of the available modes selected. Available modes are: %s", available_modes)
@@ -173,7 +173,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         logging.error("Not implemented")
         return True
 
-    async def enable_led(self, status: bool) -> None:
+    def enable_led(self, status: bool) -> None:
         """
         Turn on the motor's status LED.
         Args:
