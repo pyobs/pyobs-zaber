@@ -10,8 +10,6 @@ from pyobs.utils.enums import MotionStatus
 from zaber_motion import Units
 from zaber_motion.ascii import Connection
 
-steps = 100  # TODO: ATTENTION: hard coding
-
 
 def sin_prof(x, v_max, s_max):
     v = v_max * np.sin(np.pi * x / s_max)
@@ -47,6 +45,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         port: str,
         speed: float = 0,
         profile: str = None,
+        steps: int = 1000,
         length_unit=Units.ANGLE_DEGREES,
         speed_unit=Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND,
         system_led: bool = False,
@@ -71,7 +70,11 @@ class ZaberModeSelector(Module, IMode, IMotion):
         self.modes = modes
         self.port = port
         self.speed = speed
-        self.profile = profiles[profile]
+        if profile is not None:
+            self.profile = profiles[profile]
+        else:
+            self.profile = profile 
+        self.steps = steps
         self.length_unit = length_unit
         self.speed_unit = speed_unit
         self.enable_led(system_led)
@@ -115,7 +118,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
             device = connection.detect_devices()[0]
             axis = device.get_axis(1)
             await axis.move_absolute_async(
-                position, self.length_unit, velocity=self.speed, velocity_unit=self.speed_unit
+                position, self.length_unit, velocity=self.speed, velocity_unit=self.speed_unit, acceleration=200, acceleration_unit=Units.ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED 
             )
 
     async def profile_move_to(self, position, profile) -> None:
@@ -125,13 +128,22 @@ class ZaberModeSelector(Module, IMode, IMotion):
             position: value to which the motor moves
             profile: velocity curve
         """
-        s_max = position - self.check_position()
-        s = 0
-        ds = s_max / steps
-        while abs(s) < s_max:
-            v = (profile(s, s_max=s_max, v_max=self.speed) + profile(s + ds, s_max=s_max, v_max=self.speed)) / 2
-            s += ds
-            await self.move_by(ds, speed=v)
+        with Connection.open_serial_port(self.port) as connection:
+            connection.enable_alerts()
+            device = connection.detect_devices()[0]
+            axis = device.get_axis(1)
+
+            s_max = position - axis.get_position(unit=self.length_unit)
+            s = 0
+            ds = s_max / self.steps
+            v_list = []
+            while abs(s) < abs(s_max):
+                v = (profile(s, s_max=s_max, v_max=self.speed) + profile(s + ds, s_max=s_max, v_max=self.speed)) / 2
+                s += ds
+                v_list.append(v)
+            for v in v_list:
+                axis.move_relative(ds, self.length_unit, velocity=v, velocity_unit=self.speed_unit)
+                # await self.move_by(ds, speed=v)
 
     async def list_modes(self) -> List[str]:
         """List available modes.
