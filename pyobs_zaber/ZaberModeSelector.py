@@ -71,7 +71,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         self.modes = modes
         self.port = port
         self.speed = speed
-        self.profile = profile
+        self.profile = profiles[profile]
         self.length_unit = length_unit
         self.speed_unit = speed_unit
         self.enable_led(system_led)
