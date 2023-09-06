@@ -1,0 +1,23 @@
+
+class: pyobs_zaber.ZaberModeSelector.ZaberModeSelector
+modes:
+  photometry: 0
+  spectroscopy: 10000
+port: "/dev/ttyUSB0"
+speed: 2000
+#steps: 3
+#profile: sine
+system_led: False
+
+
+comm:
+  class: pyobs.comm.dbus.DbusComm
+  name: ZaberModeSelector
+
+
+#comm:
+#    {include _comm.yaml comm_cfg}
+#    user: motor
+
+
+
