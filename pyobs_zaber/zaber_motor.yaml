@@ -1,8 +1,0 @@
-
-class: pyobs_zaber/pyobs_zaber/zaber_xNMS23.py:14
-basis: 0
-port:  "/dev/ttyUSB0"
-
-comm:
-  class: pyobs.comm.dbus.DbusComm
-  name: zaber_xNMS23

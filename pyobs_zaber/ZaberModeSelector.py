@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 from typing import Any, List, Optional
 
 from pyobs.interfaces import IMotion
@@ -11,29 +10,6 @@ from zaber_motion import Units
 from zaber_motion.ascii import Connection
 
 
-def sin_prof(x, v_max, s_max):
-    v = v_max * np.sin(np.pi * x / s_max)
-    return v
-
-
-def gauss_prof(x, v_max, s_max):
-    mu = s_max / 2
-    sig = s_max / 6  # -> s_max/2=3*sigma
-    v = v_max * np.exp(-0.5 * (x - mu) ** 2 / sig**2)
-    return v
-
-
-def trian_prof(x, v_max, s_max):
-    if x <= s_max / 2:
-        v = 2 * v_max * x / s_max
-    else:
-        v = 2 * v_max * (1 - x / s_max)
-    return v
-
-
-profiles = {"sine": sin_prof, "gauss": gauss_prof, "triangel": trian_prof}
-
-
 class ZaberModeSelector(Module, IMode, IMotion):
     """Class for the Selection of Modus with a linear Motor (e.g. Spectroscopy or Photometry)."""
 
@@ -42,24 +18,23 @@ class ZaberModeSelector(Module, IMode, IMotion):
     def __init__(
         self,
         modes: dict,
-        port: str,
-        speed: float = 0,
-        profile: str = None,
-        steps: int = 1000,
+        port: str = "/dev/ttyUSB0",
+        speed: float = 2000,
+        acceleration: float = 200,
         length_unit=Units.ANGLE_DEGREES,
         speed_unit=Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND,
+        acceleration_unit=Units.ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED,
         system_led: bool = False,
         **kwargs: Any,
     ):
         """Creates a new ZaberModeSelector.
         Args:
             modes: dictionary of available modes in the form {name: position}
-            motor: name of the motor used to set the modes
+            port: USB port of the motor, usually "/dev/ttyUSB0"
             speed: velocity of the selector movement
-            profile: optional velocity profile in order to prevent motor from abrupt start and end
-                     available are 'gauss', 'sine' and 'triangel'
             length_unit: unit of the length, must be from zaber-motion.Units
             speed_unit: unit of the velocity, must be from zaber-motion.Units
+            system_led: whether the motor LED is active or not
         """
         Module.__init__(self, **kwargs)
 
@@ -70,13 +45,10 @@ class ZaberModeSelector(Module, IMode, IMotion):
         self.modes = modes
         self.port = port
         self.speed = speed
-        if profile is not None:
-            self.profile = profiles[profile]
-        else:
-            self.profile = profile 
-        self.steps = steps
+        self.acceleration = acceleration
         self.length_unit = length_unit
         self.speed_unit = speed_unit
+        self.acceleration_unit = acceleration_unit
         self.enable_led(system_led)
 
     async def move_by(self, length, speed=None) -> None:
@@ -95,7 +67,14 @@ class ZaberModeSelector(Module, IMode, IMotion):
             device = connection.detect_devices()[0]
             # TODO: raise xxx if len(device_list) is not 1 (0 -> no device found, >1 -> try to find correct one)
             axis = device.get_axis(1)
-            axis.move_relative(length, self.length_unit, velocity=speed, velocity_unit=self.speed_unit)
+            axis.move_relative(
+                length,
+                self.length_unit,
+                velocity=speed,
+                velocity_unit=self.speed_unit,
+                acceleration=self.acceleration,
+                acceleration_unit=self.acceleration_unit,
+            )
 
     async def check_position(self) -> float:
         """
@@ -118,32 +97,13 @@ class ZaberModeSelector(Module, IMode, IMotion):
             device = connection.detect_devices()[0]
             axis = device.get_axis(1)
             await axis.move_absolute_async(
-                position, self.length_unit, velocity=self.speed, velocity_unit=self.speed_unit, acceleration=200, acceleration_unit=Units.ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED 
+                position,
+                self.length_unit,
+                velocity=self.speed,
+                velocity_unit=self.speed_unit,
+                acceleration=self.acceleration,
+                acceleration_unit=self.acceleration_unit,
             )
-
-    async def profile_move_to(self, position, profile) -> None:
-        """
-        Move Zaber motor to a given position, where the velocity follows a given profile.
-        Args:
-            position: value to which the motor moves
-            profile: velocity curve
-        """
-        with Connection.open_serial_port(self.port) as connection:
-            connection.enable_alerts()
-            device = connection.detect_devices()[0]
-            axis = device.get_axis(1)
-
-            s_max = position - axis.get_position(unit=self.length_unit)
-            s = 0
-            ds = s_max / self.steps
-            v_list = []
-            while abs(s) < abs(s_max):
-                v = (profile(s, s_max=s_max, v_max=self.speed) + profile(s + ds, s_max=s_max, v_max=self.speed)) / 2
-                s += ds
-                v_list.append(v)
-            for v in v_list:
-                axis.move_relative(ds, self.length_unit, velocity=v, velocity_unit=self.speed_unit)
-                # await self.move_by(ds, speed=v)
 
     async def list_modes(self) -> List[str]:
         """List available modes.
@@ -169,10 +129,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
                 logging.info("Mode %s already selected.", mode)
             else:
                 logging.info("Moving mode selector ...")
-                if self.profile is None:
-                    await self.move_to(self.modes[mode])
-                else:
-                    await self.profile_move_to(self.modes[mode], profile=self.profile)
+                await self.move_to(self.modes[mode])
                 logging.info("Mode %s ready.", mode)
         else:
             logging.warning("Unknown mode %s. Available modes are: %s", mode, available_modes)
