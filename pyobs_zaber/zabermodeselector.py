@@ -105,7 +105,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
                 acceleration_unit=self.acceleration_unit,
             )
 
-    async def list_modes(self) -> List[str]:
+    async def list_modes(self, **kwargs: Any) -> List[str]:
         """List available modes.
 
         Returns:
@@ -134,7 +134,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         else:
             logging.warning("Unknown mode %s. Available modes are: %s", mode, available_modes)
 
-    async def get_mode(self) -> str:
+    async def get_mode(self, **kwargs: Any) -> str:
         """Get currently set mode.
 
         Returns:
