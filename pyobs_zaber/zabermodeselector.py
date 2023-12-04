@@ -82,9 +82,9 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         async with Connection.open_serial_port_async(self.port) as connection:
             await connection.enable_alerts_async()
-            device = (connection.detect_devices_async())[0]
+            device = (await connection.detect_devices_async())[0]
             axis = device.get_axis(1)
-            return await axis.get_position(unit=self.length_unit)
+            return await axis.get_position_async(unit=self.length_unit)
 
     async def move_to(self, position) -> None:
         """
@@ -92,9 +92,9 @@ class ZaberModeSelector(Module, IMode, IMotion):
         Args:
             position: value to which the motor moves
         """
-        async with Connection.open_serial_port(self.port) as connection:
+        async with Connection.open_serial_port_async(self.port) as connection:
             await connection.enable_alerts_async()
-            device = await connection.detect_devices_async()[0]
+            device = (await connection.detect_devices_async())[0]
             axis = device.get_axis(1)
             await axis.move_absolute_async(
                 position,
