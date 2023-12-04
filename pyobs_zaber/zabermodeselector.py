@@ -62,12 +62,12 @@ class ZaberModeSelector(Module, IMode, IMotion):
             speed = self.speed
 
         # move
-        with Connection.open_serial_port(self.port) as connection:
-            connection.enable_alerts()
-            device = connection.detect_devices()[0]
+        async with Connection.open_serial_port_async(self.port) as connection:
+            await connection.enable_alerts_async()
+            device = (await connection.detect_devices_async())[0]
             # TODO: raise xxx if len(device_list) is not 1 (0 -> no device found, >1 -> try to find correct one)
             axis = device.get_axis(1)
-            axis.move_relative(
+            await axis.move_relative_async(
                 length,
                 self.length_unit,
                 velocity=speed,
@@ -80,11 +80,11 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         Get the current position of the Zaber motor.
         """
-        with Connection.open_serial_port(self.port) as connection:
-            connection.enable_alerts()
-            device = connection.detect_devices()[0]
+        async with Connection.open_serial_port_async(self.port) as connection:
+            await connection.enable_alerts_async()
+            device = (connection.detect_devices_async())[0]
             axis = device.get_axis(1)
-            return axis.get_position(unit=self.length_unit)
+            return await axis.get_position(unit=self.length_unit)
 
     async def move_to(self, position) -> None:
         """
@@ -92,9 +92,9 @@ class ZaberModeSelector(Module, IMode, IMotion):
         Args:
             position: value to which the motor moves
         """
-        with Connection.open_serial_port(self.port) as connection:
-            connection.enable_alerts()
-            device = connection.detect_devices()[0]
+        async with Connection.open_serial_port(self.port) as connection:
+            await connection.enable_alerts_async()
+            device = await connection.detect_devices_async()[0]
             axis = device.get_axis(1)
             await axis.move_absolute_async(
                 position,
