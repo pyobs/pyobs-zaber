@@ -99,11 +99,16 @@ class ZaberDriver:
                 acceleration_unit=self.acceleration_unit,
             )
 
-    def enable_led(self, status: bool) -> None:
+    async def enable_led(self, status: bool) -> None:
         """
         Turn on the motor's status LED.
         Args:
             status: True -> LED on, False -> LED off
         """
-        with zaber_device(self.port) as device:
+        async with zaber_device(self.port) as device:
             device.settings.set("system.led.enable", float(status))
+
+    async def stop(self):
+        """Stop motion."""
+        async with zaber_axis(self.port) as axis:
+            await axis.stop_async()
