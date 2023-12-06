@@ -1,11 +1,11 @@
-from contextlib import contextmanager
+from contextlib import asynccontextmanager
 from typing import Any
 
 from zaber_motion import Units
 from zaber_motion.ascii import Connection, Axis, Device
 
 
-@contextmanager
+@asynccontextmanager
 async def zaber_device(port) -> Device:
     async with Connection.open_serial_port_async(port) as connection:
         await connection.enable_alerts_async()
@@ -13,7 +13,7 @@ async def zaber_device(port) -> Device:
         yield devices[0]
 
 
-@contextmanager
+@asynccontextmanager
 async def zaber_axis(port) -> Axis:
     async with zaber_device(port) as device:
         yield device.get_axis(1)
