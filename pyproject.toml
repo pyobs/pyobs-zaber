@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyobs-zaber"
-version = "1.0.3"
+version = "1.0.4"
 description = "pyobs model for Zaber motors"
 authors = ["Leon Meerwart <leon.meerwart@uni-goettingen.de>"]
 license = "MIT"
