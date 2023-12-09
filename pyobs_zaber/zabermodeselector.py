@@ -31,6 +31,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
 
         self.driver = ZaberDriver(**kwargs)
         self.modes = modes
+        self.current_mode = 'undefined'
 
     async def list_modes(self, **kwargs: Any) -> List[str]:
         """List available modes.
@@ -52,12 +53,13 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         available_modes = await self.list_modes()
         if mode in available_modes:
-            if await self.get_mode() == mode:
+            if self.current_mode == mode:
                 logging.info("Mode %s already selected.", mode)
             else:
                 logging.info("Moving mode selector ...")
                 await self.driver.move_to(self.modes[mode])
                 logging.info("Mode %s ready.", mode)
+                self.current_mode = mode
         else:
             logging.warning("Unknown mode %s. Available modes are: %s", mode, available_modes)
 
@@ -67,13 +69,7 @@ class ZaberModeSelector(Module, IMode, IMotion):
         Returns:
             Name of currently set mode.
         """
-        pos_current = await self.driver.get_position()
-        for mode, mode_pos in self.modes.items():
-            if round(pos_current) == mode_pos:
-                return mode
-        available_modes = await self.list_modes()
-        logging.warning("None of the available modes selected. Available modes are: %s", available_modes)
-        return "undefined"
+        return self.current_mode
 
     async def init(self, **kwargs: Any) -> None:
         """Initialize device.
