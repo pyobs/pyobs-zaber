@@ -49,7 +49,10 @@ class ZaberDriver:
         self.length_unit = length_unit
         self.speed_unit = speed_unit
         self.acceleration_unit = acceleration_unit
-        self.enable_led(system_led)
+        self.system_led = system_led
+
+    async def open(self) -> None:
+        await self.enable_led(self.system_led)
 
     async def home(self) -> None:
         async with zaber_axis(self.port) as axis:
