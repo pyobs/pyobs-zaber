@@ -26,9 +26,9 @@ class ZaberDriver:
 
     def __init__(
         self,
-        port: str = "/dev/ttyUSB0",
-        speed: float = 2000,
-        acceleration: float = 200,
+        port: str = "/dev/ttyUSB1",
+        speed: float = 10000,
+        acceleration: float = 800,
         length_unit=Units.ANGLE_DEGREES,
         speed_unit=Units.ANGULAR_VELOCITY_DEGREES_PER_SECOND,
         acceleration_unit=Units.ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED,
