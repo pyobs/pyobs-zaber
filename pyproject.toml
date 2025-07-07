@@ -1,21 +1,25 @@
-[tool.poetry]
+[project]
 name = "pyobs-zaber"
 version = "1.0.8"
 description = "pyobs model for Zaber motors"
-authors = ["Leon Meerwart <leon.meerwart@uni-goettingen.de>"]
+authors = [{ name = "Leon Meerwart", email = "leon.meerwart@uni-goettingen.de" }]
+requires-python = ">=3.9,<3.12"
 license = "MIT"
+dependencies = [
+    "zaber-motion>=4.7.0,<5",
+    "pyobs-core>=1,<2",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.9,<3.12"
-zaber-motion = "^4.7.0"
-pyobs-core = "^1.6.7"
-
-[tool.poetry.dev-dependencies]
-black = ">21.0"
+[dependency-groups]
+dev = [
+    "black>=25.1.0,<26",
+    "flake8>=7.3.0",
+    "pre-commit>=4.2.0,<5",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.black]
 line-length = 120
