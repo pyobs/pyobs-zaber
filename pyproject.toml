@@ -1,6 +1,6 @@
 [project]
 name = "pyobs-zaber"
-version = "1.1.0"
+version = "1.1.1"
 description = "pyobs model for Zaber motors"
 authors = [{ name = "Leon Meerwart", email = "leon.meerwart@uni-goettingen.de" }]
 requires-python = ">=3.9"
