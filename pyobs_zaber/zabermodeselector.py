@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from pyobs.interfaces import IMode, IMotion, IReady
+from pyobs.interfaces import IMode, IMotion, IReady, MotionState, ReadyState
 from pyobs.modules import Module
 from pyobs.utils.enums import MotionStatus
 
@@ -34,8 +34,8 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """Open module."""
         await Module.open(self)
         await self.driver.open()
-        await self.comm.set_state(IReady.State(ready=True))
-        await self.comm.set_state(IMotion.State(status=MotionStatus.PARKED))
+        await self.comm.set_state(IReady, ReadyState(ready=True))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.PARKED))
 
     async def list_modes(self, group: int = 0, **kwargs: Any) -> list[str]:
         """List available modes."""
@@ -59,10 +59,10 @@ class ZaberModeSelector(Module, IMode, IMotion):
             log.info("Mode %s already selected.", mode)
             return
         log.info("Moving mode selector ...")
-        await self.comm.set_state(IMotion.State(status=MotionStatus.SLEWING))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.SLEWING))
         await self.driver.move_to(self.modes[mode])
         self.current_mode = mode
-        await self.comm.set_state(IMotion.State(status=MotionStatus.POSITIONED))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.POSITIONED))
         log.info("Mode %s ready.", mode)
 
     async def get_mode(self, group: int = 0, **kwargs: Any) -> str:
@@ -71,19 +71,19 @@ class ZaberModeSelector(Module, IMode, IMotion):
 
     async def init(self, **kwargs: Any) -> None:
         """Initialize device."""
-        await self.comm.set_state(IMotion.State(status=MotionStatus.INITIALIZING))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.INITIALIZING))
         await self.driver.home()
         self.current_mode = "undefined"
-        await self.comm.set_state(IMotion.State(status=MotionStatus.IDLE))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.IDLE))
 
     async def park(self, **kwargs: Any) -> None:
         """Park device."""
-        await self.comm.set_state(IMotion.State(status=MotionStatus.PARKING))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.PARKING))
         await self.driver.home()
         self.current_mode = "undefined"
-        await self.comm.set_state(IMotion.State(status=MotionStatus.PARKED))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.PARKED))
 
     async def stop_motion(self, device: str | None = None, **kwargs: Any) -> None:
         """Stop the motion."""
         await self.driver.stop()
-        await self.comm.set_state(IMotion.State(status=MotionStatus.IDLE))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.IDLE))
