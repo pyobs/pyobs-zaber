@@ -1,12 +1,13 @@
 import logging
-from typing import Any, List, Optional
+from typing import Any
 
-from pyobs.interfaces import IMotion
-from pyobs.interfaces.IMode import IMode
+from pyobs.interfaces import IMode, IMotion, IReady
 from pyobs.modules import Module
 from pyobs.utils.enums import MotionStatus
 
 from pyobs_zaber.zaberdriver import ZaberDriver
+
+log = logging.getLogger(__name__)
 
 
 class ZaberModeSelector(Module, IMode, IMotion):
@@ -25,92 +26,64 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """
         Module.__init__(self, **kwargs)
 
-        # check
-        if self.comm is None:
-            logging.warning("No comm module given!")
-
         self.driver = ZaberDriver(**kwargs)
         self.modes = modes
-        self.current_mode = 'undefined'
+        self.current_mode = "undefined"
 
-    async def list_modes(self, **kwargs: Any) -> List[str]:
-        """List available modes.
+    async def open(self) -> None:
+        """Open module."""
+        await Module.open(self)
+        await self.driver.open()
+        await self.comm.set_state(IReady.State(ready=True))
+        await self.comm.set_state(IMotion.State(status=MotionStatus.PARKED))
 
-        Returns:
-            List of available modes.
-        """
+    async def list_modes(self, group: int = 0, **kwargs: Any) -> list[str]:
+        """List available modes."""
         return list(self.modes.keys())
 
-    async def set_mode(self, mode: str, **kwargs) -> None:
+    async def set_mode(self, mode: str, group: int = 0, **kwargs: Any) -> None:
         """Set the current mode.
 
         Args:
             mode: Name of mode to set.
+            group: Group number (unused, single group only).
 
         Raises:
             ValueError: If an invalid mode was given.
             MoveError: If mode selector cannot be moved.
         """
-        available_modes = await self.list_modes()
-        if mode in available_modes:
-            if self.current_mode == mode:
-                logging.info("Mode %s already selected.", mode)
-            else:
-                logging.info("Moving mode selector ...")
-                await self.driver.move_to(self.modes[mode])
-                logging.info("Mode %s ready.", mode)
-                self.current_mode = mode
-        else:
-            logging.warning("Unknown mode %s. Available modes are: %s", mode, available_modes)
+        if mode not in self.modes:
+            log.warning("Unknown mode %s. Available modes are: %s", mode, list(self.modes.keys()))
+            return
+        if self.current_mode == mode:
+            log.info("Mode %s already selected.", mode)
+            return
+        log.info("Moving mode selector ...")
+        await self.comm.set_state(IMotion.State(status=MotionStatus.SLEWING))
+        await self.driver.move_to(self.modes[mode])
+        self.current_mode = mode
+        await self.comm.set_state(IMotion.State(status=MotionStatus.POSITIONED))
+        log.info("Mode %s ready.", mode)
 
-    async def get_mode(self, **kwargs: Any) -> str:
-        """Get currently set mode.
-
-        Returns:
-            Name of currently set mode.
-        """
+    async def get_mode(self, group: int = 0, **kwargs: Any) -> str:
+        """Get currently set mode."""
         return self.current_mode
 
     async def init(self, **kwargs: Any) -> None:
-        """Initialize device.
-
-        Raises:
-            InitError: If device could not be initialized.
-        """
+        """Initialize device."""
+        await self.comm.set_state(IMotion.State(status=MotionStatus.INITIALIZING))
         await self.driver.home()
+        self.current_mode = "undefined"
+        await self.comm.set_state(IMotion.State(status=MotionStatus.IDLE))
 
     async def park(self, **kwargs: Any) -> None:
-        """Park device.
-
-        Raises:
-            ParkError: If device could not be parked.
-        """
+        """Park device."""
+        await self.comm.set_state(IMotion.State(status=MotionStatus.PARKING))
         await self.driver.home()
+        self.current_mode = "undefined"
+        await self.comm.set_state(IMotion.State(status=MotionStatus.PARKED))
 
-    async def get_motion_status(self, device: Optional[str] = None, **kwargs: Any) -> MotionStatus:
-        """Returns current motion status.
-
-        Args:
-            device: Name of device to get status for, or None.
-
-        Returns:
-            A string from the Status enumerator.
-        """
-        logging.error("Not implemented")
-        return MotionStatus.ERROR
-
-    async def stop_motion(self, device: Optional[str] = None, **kwargs: Any) -> None:
-        """Stop the motion.
-
-        Args:
-            device: Name of device to stop, or None for all.
-        """
-        logging.error("Not implemented")
-
-    async def is_ready(self, **kwargs: Any) -> bool:
-        """Returns the device is "ready", whatever that means for the specific device.
-
-        Returns:
-            Whether device is ready
-        """
-        return True
+    async def stop_motion(self, device: str | None = None, **kwargs: Any) -> None:
+        """Stop the motion."""
+        await self.driver.stop()
+        await self.comm.set_state(IMotion.State(status=MotionStatus.IDLE))
