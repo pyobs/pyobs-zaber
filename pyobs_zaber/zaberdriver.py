@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 from zaber_motion import Units
-from zaber_motion.ascii import Connection, Axis, Device
+from zaber_motion.ascii import Axis, Connection, Device
 
 
 @asynccontextmanager
