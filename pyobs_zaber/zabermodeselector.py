@@ -1,13 +1,16 @@
 import logging
 from typing import Any
 
-from pyobs.interfaces import IMode, IMotion, IReady, MotionState, ReadyState
+from pyobs.events import ModeChangedEvent
+from pyobs.interfaces import IMode, IMotion, IReady, ModeCapabilities, ModeState, MotionState, ReadyState
 from pyobs.modules import Module
 from pyobs.utils.enums import MotionStatus
 
 from pyobs_zaber.zaberdriver import ZaberDriver
 
 log = logging.getLogger(__name__)
+
+_GROUP = "Mode"
 
 
 class ZaberModeSelector(Module, IMode, IMotion):
@@ -34,12 +37,14 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """Open module."""
         await Module.open(self)
         await self.driver.open()
+
+        if self._comm:
+            await self.comm.register_event(ModeChangedEvent)
+
+        await self.comm.set_capabilities(IMode, ModeCapabilities(modes={_GROUP: list(self.modes.keys())}))
+        await self.comm.set_state(IMode, ModeState(modes={_GROUP: self.current_mode}))
         await self.comm.set_state(IReady, ReadyState(ready=True))
         await self.comm.set_state(IMotion, MotionState(status=MotionStatus.PARKED))
-
-    async def list_modes(self, group: int = 0, **kwargs: Any) -> list[str]:
-        """List available modes."""
-        return list(self.modes.keys())
 
     async def set_mode(self, mode: str, group: int = 0, **kwargs: Any) -> None:
         """Set the current mode.
@@ -63,11 +68,9 @@ class ZaberModeSelector(Module, IMode, IMotion):
         await self.driver.move_to(self.modes[mode])
         self.current_mode = mode
         await self.comm.set_state(IMotion, MotionState(status=MotionStatus.POSITIONED))
+        await self.comm.send_event(ModeChangedEvent(_GROUP, mode))
+        await self.comm.set_state(IMode, ModeState(modes={_GROUP: self.current_mode}))
         log.info("Mode %s ready.", mode)
-
-    async def get_mode(self, group: int = 0, **kwargs: Any) -> str:
-        """Get currently set mode."""
-        return self.current_mode
 
     async def init(self, **kwargs: Any) -> None:
         """Initialize device."""
