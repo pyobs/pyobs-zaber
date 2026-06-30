@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 license = "MIT"
 dependencies = [
     "zaber-motion>=4.7.0,<5",
-    "pyobs-core>=2.0.0.dev5,<3",
+    "pyobs-core>=2.0.0.dev6,<3",
 ]
 
 [dependency-groups]
