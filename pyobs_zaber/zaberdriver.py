@@ -1,12 +1,13 @@
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
 
 from zaber_motion import Units
-from zaber_motion.ascii import Connection, Axis, Device
+from zaber_motion.ascii import Axis, Connection, Device
 
 
 @asynccontextmanager
-async def zaber_device(port) -> Device:
+async def zaber_device(port) -> AsyncGenerator[Device, None]:
     async with Connection.open_serial_port_async(port) as connection:
         await connection.enable_alerts_async()
         devices = await connection.detect_devices_async()
@@ -14,7 +15,7 @@ async def zaber_device(port) -> Device:
 
 
 @asynccontextmanager
-async def zaber_axis(port) -> Axis:
+async def zaber_axis(port) -> AsyncGenerator[Axis, None]:
     async with zaber_device(port) as device:
         yield device.get_axis(1)
 
