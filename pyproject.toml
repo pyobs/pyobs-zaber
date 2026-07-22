@@ -6,7 +6,7 @@ authors = [{ name = "Leon Meerwart", email = "leon.meerwart@uni-goettingen.de" }
 requires-python = ">=3.11"
 license = "MIT"
 dependencies = [
-    "zaber-motion>=4.7.0,<5",
+    "zaber-motion>=4.7.0,<10",
     "pyobs-core>=2.0.0.dev6,<3",
 ]
 
