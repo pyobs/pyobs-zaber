@@ -46,12 +46,12 @@ class ZaberModeSelector(Module, IMode, IMotion):
         await self.comm.set_state(IReady, ReadyState(ready=True))
         await self.comm.set_state(IMotion, MotionState(status=MotionStatus.PARKED))
 
-    async def set_mode(self, mode: str, group: int = 0, **kwargs: Any) -> None:
+    async def set_mode(self, mode: str, group: str = "", **kwargs: Any) -> None:
         """Set the current mode.
 
         Args:
             mode: Name of mode to set.
-            group: Group number (unused, single group only).
+            group: Name of the group to set the mode for (unused, single group only).
 
         Raises:
             ValueError: If an invalid mode was given.
