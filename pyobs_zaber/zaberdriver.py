@@ -110,7 +110,7 @@ class ZaberDriver:
             status: True -> LED on, False -> LED off
         """
         async with zaber_device(self.port) as device:
-            device.settings.set("system.led.enable", float(status))
+            await device.settings.set_async("system.led.enable", float(status))
 
     async def stop(self):
         """Stop motion."""
