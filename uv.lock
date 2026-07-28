@@ -1411,21 +1411,6 @@ wheels = [
 ]
 
 [[package]]
-name = "protobuf"
-version = "4.21.12"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ba/dd/f8a01b146bf45ac12a829bbc599e6590aa6a6849ace7d28c42d77041d6ab/protobuf-4.21.12.tar.gz", hash = "sha256:7cd532c4566d0e6feafecc1059d04c7915aec8e182d1cf7adee8b24ef1e2e6ab", size = 220324, upload-time = "2022-12-14T17:29:34.648Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/42/9b/7f464fa46797486439b35fb5aa0dbc99face447396619f1c98da13257732/protobuf-4.21.12-cp310-abi3-win32.whl", hash = "sha256:b135410244ebe777db80298297a97fbb4c862c881b4403b71bac9d4107d61fd1", size = 509874, upload-time = "2022-12-14T16:18:22.402Z" },
-    { url = "https://files.pythonhosted.org/packages/f8/21/56796f96eadb1e1974090278312de28c8dced584e38ea7ee770e912c7af2/protobuf-4.21.12-cp310-abi3-win_amd64.whl", hash = "sha256:89f9149e4a0169cddfc44c74f230d7743002e3aa0b9472d8c28f0388102fc4c2", size = 527007, upload-time = "2022-12-14T16:18:24.882Z" },
-    { url = "https://files.pythonhosted.org/packages/05/b6/6e9b82445e3561132a871e38f5601b12749beb5305eaa085d7f0c59728c9/protobuf-4.21.12-cp37-abi3-macosx_10_9_universal2.whl", hash = "sha256:299ea899484ee6f44604deb71f424234f654606b983cb496ea2a53e3c63ab791", size = 486247, upload-time = "2022-12-14T16:18:26.681Z" },
-    { url = "https://files.pythonhosted.org/packages/76/74/28f42d3e6b0c7bffaa04348a631de7a22c3d81d1564753301d058c80fff5/protobuf-4.21.12-cp37-abi3-manylinux2014_aarch64.whl", hash = "sha256:d1736130bce8cf131ac7957fa26880ca19227d4ad68b4888b3be0dea1f95df97", size = 405144, upload-time = "2022-12-14T16:18:28.662Z" },
-    { url = "https://files.pythonhosted.org/packages/e7/a2/3273c05fc5d959fa90de6453ebd6d45c6d4fab3ec212d631625ea5780921/protobuf-4.21.12-cp37-abi3-manylinux2014_x86_64.whl", hash = "sha256:78a28c9fa223998472886c77042e9b9afb6fe4242bd2a2a5aced88e3f4422aa7", size = 409837, upload-time = "2022-12-14T16:18:30.894Z" },
-    { url = "https://files.pythonhosted.org/packages/c6/3b/33f3bd47dbfdd17ed87024b6473b26ee3a8c3303f019e91557b2654703a4/protobuf-4.21.12-py2.py3-none-any.whl", hash = "sha256:a53fd3f03e578553623272dc46ac2f189de23862e68565e83dde203d41b76fc5", size = 165013, upload-time = "2022-12-14T17:29:31.792Z" },
-    { url = "https://files.pythonhosted.org/packages/d4/9f/5cb64224bdd4695f5b024a05a4bea31af1d8e3127d45a74161631fe8180e/protobuf-4.21.12-py3-none-any.whl", hash = "sha256:b98d0148f84e3a3c569e19f52103ca1feacdac0d2df8d6533cf983d1fda28462", size = 291651, upload-time = "2022-12-14T16:18:45.212Z" },
-]
-
-[[package]]
 name = "psutil"
 version = "7.2.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1793,7 +1778,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "pyobs-core", specifier = ">=2.0.0.dev48,<3" },
-    { name = "zaber-motion", specifier = ">=4.7.0,<5" },
+    { name = "zaber-motion", specifier = ">=4.7.0,<11" },
 ]
 
 [package.metadata.requires-dev]
@@ -2005,15 +1990,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/4d/76/3f72d8fc38c1cb77b38c56a70da9d0c17700cc1cc50f9649c9d3c8f5ba71/ruff-0.15.22-py3-none-win32.whl", hash = "sha256:e5ba0e4a13fd14abbed2a77b517a3911290c6c6c59ef67784328d1668fab76cf", size = 10789165, upload-time = "2026-07-16T15:14:04.16Z" },
     { url = "https://files.pythonhosted.org/packages/cb/46/4965251734c2b6fcdca1b1b187d20bcac3af0ee5b083b89c910bb961ce3a/ruff-0.15.22-py3-none-win_amd64.whl", hash = "sha256:9be63ba1eb936acd2d1342fb8337c356353706fce233b2a15a09a97037e6acde", size = 11938297, upload-time = "2026-07-16T15:14:07.316Z" },
     { url = "https://files.pythonhosted.org/packages/57/c9/e69b1ff4c8b69093ef08b8919ab767af0569666865b39c30a8795d88d3c6/ruff-0.15.22-py3-none-win_arm64.whl", hash = "sha256:e1168075b72158510839f250027659cdd78476f40507dd517892304c41318661", size = 11298172, upload-time = "2026-07-16T15:14:10.51Z" },
-]
-
-[[package]]
-name = "rx"
-version = "3.2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/34/b5/e0f602453b64b0a639d56f3c05ab27202a4eec993eb64d66c077c821b621/Rx-3.2.0.tar.gz", hash = "sha256:b657ca2b45aa485da2f7dcfd09fac2e554f7ac51ff3c2f8f2ff962ecd963d91c", size = 105540, upload-time = "2021-04-25T15:56:44.751Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e2/a9/efeaeca4928a9a56d04d609b5730994d610c82cf4d9dd7aa173e6ef4233e/Rx-3.2.0-py3-none-any.whl", hash = "sha256:922c5f4edb3aa1beaa47bf61d65d5380011ff6adcd527f26377d05cb73ed8ec8", size = 199245, upload-time = "2021-04-25T15:57:07.487Z" },
 ]
 
 [[package]]
@@ -2392,45 +2368,19 @@ wheels = [
 
 [[package]]
 name = "zaber-motion"
-version = "4.7.0"
+version = "10.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "protobuf" },
-    { name = "rx" },
-    { name = "zaber-motion-bindings-darwin", marker = "sys_platform == 'darwin'" },
-    { name = "zaber-motion-bindings-linux", marker = "sys_platform == 'linux'" },
-    { name = "zaber-motion-bindings-windows", marker = "sys_platform == 'win32'" },
+    { name = "reactivex" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/88/71/48ba606e665802ef11da7cc249ca7067843fe7cf3eaebdcd6e5732513a01/zaber_motion-4.7.0.tar.gz", hash = "sha256:919d2c1bc93b6e133a6caecc7690b26d7142c3533d5530732543a31f155f8a5e", size = 150582, upload-time = "2023-11-16T00:11:34.687Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/c2/2f127393f469591a03e6c96c016fdf5866acafeab6024fb8367c532b27f2/zaber_motion-10.0.0.tar.gz", hash = "sha256:49d16859ce8fda2157ecca977638fd03d3f48fd82c860fcaca0f19f654bd8891", size = 326082, upload-time = "2026-07-23T20:25:00.377Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/30/3b/e3cafbd6d47baafc3bab9d66dcaf304d38bfa88ea2c6069455ab72acc714/zaber_motion-4.7.0-py2.py3-none-any.whl", hash = "sha256:aec5180b7af0b13a86967edc98c5562cbdd6a5676036bd876c8398cc3c3d5c9e", size = 232283, upload-time = "2023-11-16T00:11:31.753Z" },
-]
-
-[[package]]
-name = "zaber-motion-bindings-darwin"
-version = "4.7.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ef/cd/87464e8596a27f9eba5eac7cb445c0d152ae5009d2e5be16846de4bf046a/zaber_motion_bindings_darwin-4.7.0.tar.gz", hash = "sha256:85d18d981dd69182a0818b7ccae45fa031559a5dd1a286fe4dbb4cc2e7df7306", size = 21231265, upload-time = "2023-11-16T00:11:28.511Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/cf/b5/366b5eec5f5e1e71180aac532d760f3c641a1894e07affb64d77682b1e18/zaber_motion_bindings_darwin-4.7.0-py3-none-any.whl", hash = "sha256:43f06cd2cb509598355db25c6a3ab53dc250f0cce788f0884a3b637c322f01a7", size = 21270415, upload-time = "2023-11-16T00:11:24.181Z" },
-]
-
-[[package]]
-name = "zaber-motion-bindings-linux"
-version = "4.7.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d5/7f/6e173d32821c045105b802c5e4fc816c6760495b86fc1a6f05a6e20b1ef5/zaber_motion_bindings_linux-4.7.0.tar.gz", hash = "sha256:d187163b044553305d7576447e7fdeae15dae1d4404349412d23edb3dc4f50db", size = 38310347, upload-time = "2023-11-16T00:11:18.429Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/67/56/2c2d402ed98c0173ba2eafc74727d0b3484dce92a3742fc46a349649b209/zaber_motion_bindings_linux-4.7.0-py3-none-any.whl", hash = "sha256:1a716c7fefcef197da7d1ea68239b826cd49c1100e42296d6ba12ae50849c24b", size = 38413585, upload-time = "2023-11-16T00:11:13.035Z" },
-]
-
-[[package]]
-name = "zaber-motion-bindings-windows"
-version = "4.7.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/67/ab/37be08c585cf033a359c057522312f5303a57a57edb61ce460525c5e3ec3/zaber_motion_bindings_windows-4.7.0.tar.gz", hash = "sha256:c22e791146c6a9687fb7a7e25b833f60e1590b63dfbbdedc287a9baa7d9062a6", size = 19098504, upload-time = "2023-11-16T00:11:06.971Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/34/d8/47094104f1c87577d512de654ac24d4f80ecea8f8d5c180d080dda50828d/zaber_motion_bindings_windows-4.7.0-py3-none-any.whl", hash = "sha256:8b3f4ecfc7568df9558b29155c89c34477e215ba1bbd0af24bf31bca5ec2c4c7", size = 19253737, upload-time = "2023-11-16T00:11:01.093Z" },
+    { url = "https://files.pythonhosted.org/packages/77/b7/bfe36d916c8e1358ba84e1565835ee29f72d0178d68122ae8f38c2c1cc50/zaber_motion-10.0.0-py3-none-macosx_10_4_universal2.whl", hash = "sha256:5081d5e4e48d22f48069a9c39c924f14479b5df6ccca990b9f32e7f1d667d411", size = 14532113, upload-time = "2026-07-23T20:24:44.362Z" },
+    { url = "https://files.pythonhosted.org/packages/89/e0/cfad29ff739ec7fe98baa90ad5f8be25000c3c19058e031198edc40529d9/zaber_motion-10.0.0-py3-none-manylinux_2_35_aarch64.whl", hash = "sha256:19066da7eb2951a5f483d6f512a52bc194b576196e4402b272eb370bbe50d4f7", size = 7365834, upload-time = "2026-07-23T20:24:47.041Z" },
+    { url = "https://files.pythonhosted.org/packages/02/c9/a43e45b7a4ae3ad0a1ed79b5563e8a75ba9ca76038ce59f6ff6bcd0b25bf/zaber_motion-10.0.0-py3-none-manylinux_2_35_x86_64.whl", hash = "sha256:d277b428aa4e71f1a270d7173488561a005cf74fa49d62424a5bb546b8e9ba0b", size = 8114780, upload-time = "2026-07-23T20:24:51.741Z" },
+    { url = "https://files.pythonhosted.org/packages/68/97/ee0914dd93c14339e23dd669595c58ef7ff385de80ed1271ec78611c4fdd/zaber_motion-10.0.0-py3-none-win32.whl", hash = "sha256:e9038485f804c799429191e7ed4a79994e674d41e9fa634e48f428289f6742fc", size = 7683702, upload-time = "2026-07-23T20:24:54.206Z" },
+    { url = "https://files.pythonhosted.org/packages/26/0b/f328468bab54295537d4eb8621b2f623c2e82f709d9a4ce6cef81582fe9b/zaber_motion-10.0.0-py3-none-win_amd64.whl", hash = "sha256:ada1209498b06f9b787f5ef2c4daf9f619039a6e7f18ada965cdc290d6877a9b", size = 7867646, upload-time = "2026-07-23T20:24:56.272Z" },
+    { url = "https://files.pythonhosted.org/packages/29/d4/f2058efdad35cbeb85c806ce5d019f321695eaf2585604775c281be00cc9/zaber_motion-10.0.0-py3-none-win_arm64.whl", hash = "sha256:89736e044ec230326602a14d2151a3b480a9d2df93cca03d5e50196dc5357ed5", size = 7128866, upload-time = "2026-07-23T20:24:58.183Z" },
 ]
 
 [[package]]
