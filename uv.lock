@@ -1956,7 +1956,7 @@ wheels = [
 
 [[package]]
 name = "pyobs-zaber"
-version = "2.0.0.dev10"
+version = "2.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "pyobs-core" },
