@@ -2,7 +2,17 @@ import logging
 from typing import Any
 
 from pyobs.events import ModeChangedEvent
-from pyobs.interfaces import IMode, IMotion, IReady, ModeCapabilities, ModeState, MotionState, ReadyState
+from pyobs.interfaces import (
+    FitsHeaderEntry,
+    IFitsHeaderBefore,
+    IMode,
+    IMotion,
+    IReady,
+    ModeCapabilities,
+    ModeState,
+    MotionState,
+    ReadyState,
+)
 from pyobs.modules import Module
 from pyobs.utils.enums import MotionStatus
 
@@ -13,7 +23,7 @@ log = logging.getLogger(__name__)
 _GROUP = "Mode"
 
 
-class ZaberModeSelector(Module, IMode, IMotion):
+class ZaberModeSelector(Module, IMode, IMotion, IFitsHeaderBefore):
     """Class for the Selection of Modus with a linear Motor (e.g. Spectroscopy or Photometry)."""
 
     __module__ = "pyobs_zaber.ZaberModeSelector"
@@ -90,3 +100,9 @@ class ZaberModeSelector(Module, IMode, IMotion):
         """Stop the motion."""
         await self.driver.stop()
         await self.comm.set_state(IMotion, MotionState(status=MotionStatus.IDLE))
+
+    async def get_fits_header_before(
+        self, namespaces: list[str] | None = None, **kwargs: Any
+    ) -> dict[str, FitsHeaderEntry]:
+        """Returns FITS header for the current status of this module."""
+        return {"INSMODE": FitsHeaderEntry(self.current_mode, "Current instrument mode")}
