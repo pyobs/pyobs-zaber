@@ -31,15 +31,18 @@ class ZaberModeSelector(Module, IMode, IMotion, IFitsHeaderBefore):
     def __init__(
         self,
         modes: dict,
+        zaber: dict,
         **kwargs: Any,
     ):
         """Creates a new ZaberModeSelector.
         Args:
             modes: dictionary of available modes in the form {name: position}
+            zaber: keyword arguments for the underlying :class:`~pyobs_zaber.zaberdriver.ZaberDriver`, e.g.
+                ``{"port": "/dev/ttyUSB0", "speed": 10000}``; pass ``{}`` to use all driver defaults
         """
         Module.__init__(self, **kwargs)
 
-        self.driver = ZaberDriver(**kwargs)
+        self.driver = ZaberDriver(**zaber)
         self.modes = modes
         self.current_mode = "undefined"
 

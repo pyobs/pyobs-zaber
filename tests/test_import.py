@@ -18,7 +18,7 @@ def test_import_driver_module() -> None:
 
 
 def test_instantiate_mode_selector() -> None:
-    selector = ZaberModeSelector(modes={"spec": 100.0, "phot": 200.0})
+    selector = ZaberModeSelector(modes={"spec": 100.0, "phot": 200.0}, zaber={})
     assert isinstance(selector, Module)
     assert isinstance(selector, IMode)
     assert isinstance(selector, IMotion)

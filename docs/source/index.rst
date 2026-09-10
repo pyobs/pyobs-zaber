@@ -11,10 +11,11 @@ Example configuration
 This is an example configuration::
 
     class: pyobs_zaber.ZaberModeSelector
-    port: /dev/ttyUSB0
     modes:
       Photometry: 0
       Spectroscopy: 50000
+    zaber:
+      port: /dev/ttyUSB0
 
     # communication
     comm:
