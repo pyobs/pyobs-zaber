@@ -32,6 +32,7 @@ class ZaberModeSelector(Module, IMode, IMotion, IFitsHeaderBefore):
         self,
         modes: dict,
         zaber: dict,
+        initial_mode: str | None = None,
         **kwargs: Any,
     ):
         """Creates a new ZaberModeSelector.
@@ -39,11 +40,19 @@ class ZaberModeSelector(Module, IMode, IMotion, IFitsHeaderBefore):
             modes: dictionary of available modes in the form {name: position}
             zaber: keyword arguments for the underlying :class:`~pyobs_zaber.zaberdriver.ZaberDriver`, e.g.
                 ``{"port": "/dev/ttyUSB0", "speed": 10000}``; pass ``{}`` to use all driver defaults
+            initial_mode: mode to move to when the module is opened; if None, no move is made on startup
+
+        Raises:
+            ValueError: If initial_mode is not one of the configured modes.
         """
         Module.__init__(self, **kwargs)
 
+        if initial_mode is not None and initial_mode not in modes:
+            raise ValueError(f"Unknown initial mode '{initial_mode}'. Available modes: {list(modes.keys())}")
+
         self.driver = ZaberDriver(**zaber)
         self.modes = modes
+        self.initial_mode = initial_mode
         self.current_mode = "undefined"
 
     async def open(self) -> None:
@@ -55,9 +64,15 @@ class ZaberModeSelector(Module, IMode, IMotion, IFitsHeaderBefore):
             await self.comm.register_event(ModeChangedEvent)
 
         await self.comm.set_capabilities(IMode, ModeCapabilities(modes={_GROUP: list(self.modes.keys())}))
-        await self.comm.set_state(IMode, ModeState(modes={_GROUP: self.current_mode}))
+
+        if self.initial_mode is not None:
+            # set_mode publishes the mode and motion state (SLEWING -> POSITIONED) itself
+            await self.set_mode(self.initial_mode)
+        else:
+            await self.comm.set_state(IMode, ModeState(modes={_GROUP: self.current_mode}))
+            await self.comm.set_state(IMotion, MotionState(status=MotionStatus.IDLE))
+
         await self.comm.set_state(IReady, ReadyState(ready=True))
-        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.IDLE))
 
     async def set_mode(self, mode: str, group: str = "", **kwargs: Any) -> None:
         """Set the current mode.

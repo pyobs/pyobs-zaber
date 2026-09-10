@@ -49,6 +49,36 @@ def test_driver_options_are_not_accepted_at_top_level() -> None:
         ZaberModeSelector(modes=_MODES, zaber={}, port="/dev/ttyUSB7")
 
 
+def test_unknown_initial_mode_is_rejected() -> None:
+    with pytest.raises(ValueError):
+        ZaberModeSelector(modes=_MODES, zaber={}, initial_mode="nope")
+
+
+def _openable_selector(initial_mode: str | None = None) -> tuple[ZaberModeSelector, AsyncMock]:
+    """Selector with all hardware I/O mocked out, ready to be opened."""
+    selector = ZaberModeSelector(modes=_MODES, zaber={}, initial_mode=initial_mode)
+    selector.driver.open = AsyncMock()  # type: ignore[method-assign]
+    move_to = AsyncMock()
+    selector.driver.move_to = move_to  # type: ignore[method-assign]
+    return selector, move_to
+
+
+@pytest.mark.asyncio
+async def test_open_moves_to_initial_mode() -> None:
+    selector, move_to = _openable_selector(initial_mode="phot")
+    await selector.open()
+    move_to.assert_awaited_once_with(200.0)
+    assert selector.current_mode == "phot"
+
+
+@pytest.mark.asyncio
+async def test_open_without_initial_mode_does_not_move() -> None:
+    selector, move_to = _openable_selector()
+    await selector.open()
+    move_to.assert_not_awaited()
+    assert selector.current_mode == "undefined"
+
+
 @pytest.mark.asyncio
 async def test_set_mode_moves_to_position() -> None:
     selector, move_to = _make_selector()

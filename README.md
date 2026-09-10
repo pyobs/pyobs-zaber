@@ -38,6 +38,8 @@ block (may be empty to use all driver defaults) with parameters for the underlyi
                 Velocity of the selector movement (default: 10000).
             acceleration:
                 Acceleration of the selector movement (default: 800).
+    initial_mode:
+        Mode to move to when the module opens (default: not set, i.e. the motor stays where it is).
 
 A basic module configuration would look like this:
 
@@ -46,6 +48,7 @@ A basic module configuration would look like this:
     modes:
       Photometry: 0
       Spectroscopy: 50000
+    initial_mode: Photometry
     zaber:
       port: /dev/ttyUSB0
 
