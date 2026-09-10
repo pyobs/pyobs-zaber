@@ -25,26 +25,29 @@ Alternatively, with plain `venv`/`pip`:
 
 Configuration
 -------------
-The *ZaberModeSelector* class takes a dictionary of named modes mapped to motor positions, plus some parameters
-for the underlying Zaber driver:
+The *ZaberModeSelector* class takes a dictionary of named modes mapped to motor positions, plus a required *zaber*
+block (may be empty to use all driver defaults) with parameters for the underlying Zaber driver:
 
     modes:
         Dictionary of available modes in the form {name: position}.
-    port:
-        USB port of the motor (default: /dev/ttyUSB1).
-    speed:
-        Velocity of the selector movement (default: 10000).
-    acceleration:
-        Acceleration of the selector movement (default: 800).
+    zaber:
+        Keyword arguments passed to the underlying ZaberDriver:
+            port:
+                USB port of the motor (default: /dev/ttyUSB1).
+            speed:
+                Velocity of the selector movement (default: 10000).
+            acceleration:
+                Acceleration of the selector movement (default: 800).
 
 A basic module configuration would look like this:
 
     class: pyobs_zaber.ZaberModeSelector
     name: Mode selector
-    port: /dev/ttyUSB0
     modes:
       Photometry: 0
       Spectroscopy: 50000
+    zaber:
+      port: /dev/ttyUSB0
 
 
 Dependencies
