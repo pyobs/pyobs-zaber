@@ -57,7 +57,7 @@ class ZaberModeSelector(Module, IMode, IMotion, IFitsHeaderBefore):
         await self.comm.set_capabilities(IMode, ModeCapabilities(modes={_GROUP: list(self.modes.keys())}))
         await self.comm.set_state(IMode, ModeState(modes={_GROUP: self.current_mode}))
         await self.comm.set_state(IReady, ReadyState(ready=True))
-        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.PARKED))
+        await self.comm.set_state(IMotion, MotionState(status=MotionStatus.IDLE))
 
     async def set_mode(self, mode: str, group: str = "", **kwargs: Any) -> None:
         """Set the current mode.
